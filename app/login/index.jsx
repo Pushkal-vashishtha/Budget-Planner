@@ -3,7 +3,22 @@ import React from 'react'
 import loginBg from './../../assets/images/loginbg.png'
 import Colors from './../../utils/Colors.jsx'
 import { Button } from 'react-native-web'
+import {client} from './../../utils/KindeConfig.jsx'
+import services from './../../utils/services.jsx'
+import { useRouter } from 'expo-router'
+
 export default function LoginScreen() {
+  
+  const router = useRouter();
+  const handleSignIn = async () => {
+    const token = await client.login();
+    if (token) {
+      // User was authenticated
+      await services.storeData('login','true');
+      router.replace('/')
+    }
+  };
+
   return (
     <View style={{
         display:'flex',
@@ -41,7 +56,7 @@ export default function LoginScreen() {
             Stay on track with your expenses data
         </Text>
         <TouchableOpacity style={styles.button}
-        onPress={()=>console.log("hi")}>
+        onPress={handleSignIn}>
             <Text style={{
                 textAlign:'center',
                 color:Colors.PRIMARY
@@ -65,7 +80,6 @@ const styles = StyleSheet.create({
     marginTop:30,
     borderWidth:5,
     borderRadius:20,
-    borderBlockColor:Colors.BLACK
   },
   button:{
     backgroundColor:Colors.WHITE,
